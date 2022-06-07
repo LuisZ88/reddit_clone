@@ -26,10 +26,11 @@ const AuthModal: React.FC = () => {
     setModalState((prev) => ({ ...prev, open: false }));
   };
   useEffect(() => {
-    if (user) {
-      handleClose();
-    }
-  }, [user]);
+    
+    if (user) handleClose();
+    
+    
+  }, [user]);// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
