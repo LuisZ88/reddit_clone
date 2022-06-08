@@ -20,7 +20,7 @@ const Directory: React.FC = () => {
             <Icon as={TiHome} fontSize={24} mr={{ base: 1, md: 2 }} />
             <Flex display={{ base: "none", lg: "flex" }}>
               <Text fontWeight={600} fontSize="10pt">
-                Home
+                Principal
               </Text>
             </Flex>
           </Flex>

@@ -6,9 +6,7 @@ import { authModalState } from "../../../atoms/authModalAtom";
 import { auth } from "../../../firebase/clientApp";
 import { useSetRecoilState } from "recoil";
 
-type ResetPasswordProps = {
-  
-};
+type ResetPasswordProps = {};
 
 const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -27,15 +25,16 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
     <Flex direction="column" alignItems="center" width="100%">
       <Icon as={BsReddit} color="brand.100" fontSize={40} mb={2} />
       <Text fontWeight={700} mb={2}>
-        Reset your password
+        Restablecer tu contraseña
       </Text>
       {success ? (
-        <Text mb={4}>Check your email :)</Text>
+        <Text mb={4}>Comprueba tu email :)</Text>
       ) : (
         <>
           <Text fontSize="sm" textAlign="center" mb={2}>
-            Enter the email associated with your account and we will send you a
-            reset link
+            Dinos la dirección de correo electrónico
+            asociada con tu cuenta de Reddit, y te enviaremos un correo con un
+            enlace para restablecer tu contraseña.
           </Text>
           <form onSubmit={onSubmit} style={{ width: "100%" }}>
             <Input
@@ -71,7 +70,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
               type="submit"
               isLoading={sending}
             >
-              Reset Password
+              Restablecer contraseña
             </Button>
           </form>
         </>
@@ -91,7 +90,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
             }))
           }
         >
-          LOGIN
+          INICIAR SESIÓN
         </Text>
         <Icon as={BsDot} />
         <Text
@@ -102,7 +101,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
             }))
           }
         >
-          SIGN UP
+          REGISTRARSE
         </Text>
       </Flex>
     </Flex>

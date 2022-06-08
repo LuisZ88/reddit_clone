@@ -38,9 +38,9 @@ const AuthModal: React.FC = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">
-            {modalState.view === "login" && "Login"}
-            {modalState.view === "signup" && "Sign Up"}
-            {modalState.view === "resetPassword" && "Reset Password"}
+            {modalState.view === "login" && "Inciar sesión"}
+            {modalState.view === "signup" && "Registrarse"}
+            {modalState.view === "resetPassword" && "Restablecer tu contraseña"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -53,7 +53,7 @@ const AuthModal: React.FC = () => {
             <Flex direction="column" align="center" justify="ceter" width="70%">
               {modalState.view === "login" || modalState.view === "signup" ? (<>  <OAuthButtons />
               <Text color="grey.400" fontWeight={700}>
-                OR
+                O
               </Text>
               <AuthInputs /></>) : (<ResetPassword/>) }
 

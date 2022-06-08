@@ -76,7 +76,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         >
           <Flex align="center">
             <Icon fontSize={20} mr={1} color="gray.400" as={CgProfile} />
-            Profile
+            Perfil
           </Flex>
         </MenuItem>
         <MenuDivider />
@@ -88,7 +88,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         >
           <Flex align="center">
             <Icon fontSize={20} mr={1} color="gray.400" as={MdOutlineLogin} />
-            Log out
+            Cerrar sesión
           </Flex>
         </MenuItem></>) : (<>
         <MenuItem
@@ -99,7 +99,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         >
           <Flex align="center">
             <Icon fontSize={20} mr={1} color="gray.400" as={MdOutlineLogin} />
-            Log in / Sign up
+            Inciar sesión / Registrarse
           </Flex>
         </MenuItem></>)}
        
