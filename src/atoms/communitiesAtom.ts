@@ -7,12 +7,12 @@ export interface Community{
     numberOfMembers: number;
     privacyType: "public" | "private" | "restricted";
     createdAt?: Timestamp;
-    ImageUrl?: string;
+    imageURL?: string;
 }
-interface CommunitySnippet{
+export interface CommunitySnippet{
     communityId: string;
     isModerator?: boolean;
-    imgUrl?: string;
+    imageURL?: string;
 }
 interface CommunityState {
     mySnippets: CommunitySnippet[];

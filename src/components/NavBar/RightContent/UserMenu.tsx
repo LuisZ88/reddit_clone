@@ -16,17 +16,21 @@ import { VscAccount } from "react-icons/vsc";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogin } from "react-icons/md";
 import { auth } from "../../../firebase/clientApp";
-import { useSetRecoilState } from "recoil";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
 import { IoSparkles } from "react-icons/io5";
+import { communityState } from "../../../atoms/communitiesAtom";
 
 type UserMenuProps = {
   user?: User | null;
 };
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
-  const logOut = () => {
-    signOut(auth);
+  const resetCommunity = useResetRecoilState(communityState);
+  const logOut = async () => {
+    await signOut(auth);
+    resetCommunity();
+
   };
   const setAuthModalState = useSetRecoilState(authModalState);
   return (
