@@ -82,7 +82,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
           privacyType: communityType,
         });
         //create snnipet for community
-        transaction.set(doc(firestore, `users/${user?.uid}/communitySnippe`, communityName), {
+        transaction.set(doc(firestore, `users/${user?.uid}/communitySnippets`, communityName), {
           communityId: communityName,
           isModerator: true,
         });
