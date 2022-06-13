@@ -73,6 +73,7 @@ const useCommunityData = () => {
   ) => {
       if(!user){
         setAuthModalState({open: true, view: "login"});
+        return;
       }
     if (isJoined) {
       leaveCommunity(communityData.id);
@@ -101,7 +102,7 @@ const useCommunityData = () => {
   useEffect(() => {
     if (!user) return;
     getMySnippets();
-  }, [user]);
+  }, [user]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     communityStateValue,
