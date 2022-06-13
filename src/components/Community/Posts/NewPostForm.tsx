@@ -8,6 +8,10 @@ import {
   Stack,
   Textarea,
   Image,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import {
@@ -29,9 +33,13 @@ import { postState } from "../../../atoms/postsAtom";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import TextInputs from "./PostForm/TextInputs";
 import ImageUpload from "./PostForm/ImageUpload";
+import { Post } from "../../../atoms/postsAtom";
+import { Timestamp } from "@google-cloud/firestore";
 
 type NewPostFormProps = {
   onSubmit: (values: any) => void;
+  user: User;
+  communityImageURL?: string;
 };
 
 const formTabs: TabItem[] = [
@@ -63,7 +71,8 @@ export type TabItem = {
   icon: typeof Icon.arguments;
   disabled?: boolean;
 };
-const NewPostForm: React.FC<NewPostFormProps> = () => {
+const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
+  const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
     title: "",
@@ -71,15 +80,47 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
   });
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string>();
-  const handleCreatePost = async (values: any) => {
+  const [error, setError] = useState(false);
+  const handleCreatePost = async () => {
+    const { communityId } = router.query;
     // crear post object
-
+    const newPost: Post = {
+      communityId: communityId as string,
+      creatorId: user?.uid,
+      creatorDisplayName: user.email!.split("@")[0],
+      title: textInputs.title,
+      body: textInputs.body,
+      numberOfComments: 0,
+      votesStatus: 0,
+      createdAt: serverTimestamp() as Timestamp,
+    };
     // guardar post en firestore
+    setLoading(true);
+    try {
+      const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
+      // comprobar si hay un archivo seleccionado
+     
 
-    // comprobar si hay un archivo seleccionado
-        // si hay, subir archivo a storage
+      if (selectedFile) {
+        const imageRef = ref(storage, `posts/${postDocRef.id}/image`);
+        // si hay, subir archivo a storage y guardar url en post
+        await uploadString(imageRef, selectedFile, "data_url");
+        // actualizar el post con la url de la imagen
+        const downloadUrl = await getDownloadURL(imageRef);
+        await updateDoc(postDocRef, { imageUrl: downloadUrl });
+      }
+       // redirecionar a la comunidad
+     router.back();
+    } catch (error: any) {
+      console.log("handleCreatePost error", error);
+      setError(true);
+    }
+    setLoading(false);
+    
 
+   
   };
+
   const onSelectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
     if (e.target.files?.[0]) {
@@ -127,6 +168,12 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
           />
         )}
       </Flex>
+      {error && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Error creando la publicación</AlertTitle>
+        </Alert>
+      )}
     </Flex>
   );
 };
