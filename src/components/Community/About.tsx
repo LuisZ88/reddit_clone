@@ -31,10 +31,13 @@ type AboutProps = {
 
 const About: React.FC<AboutProps> = ({ communityData }) => {
   const [user] = useAuthState(auth);
+  const router = useRouter();
   const selectFileRef = useRef<HTMLInputElement>(null);
   const { setSelectedFile, onSelectFile, selectedFile } = useSelectFile();
   const [uploadingImage, setUploadingImage] = React.useState(false);
   const setCommunityStateValue = useSetRecoilState(communityState);
+  const { communityId } = router.query;
+
   const onUpdateImage = async () => {
     console.log("onUpdateImage");
     if (!selectedFile) return;
@@ -55,7 +58,8 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
       }));
     } catch (error: any) {
       console.log("onUpdateImage error", error);
-    } setUploadingImage(false);
+    }
+    setUploadingImage(false);
   };
 
   return (
@@ -81,7 +85,7 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
             </Flex>
             <Flex direction="column" flexGrow={1}>
               <Text>1</Text>
-              <Text>Active</Text>
+              <Text>Activos</Text>
             </Flex>
           </Flex>
           <Divider />
@@ -102,7 +106,7 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
               </Text>
             )}
           </Flex>
-          <Link href={`/r/${communityData.id}/submit`}>
+          <Link href={`/r/${communityId}/submit`}>
             <Button mt={3} height="30px">
               Publicar
             </Button>
@@ -142,14 +146,17 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
                   (uploadingImage ? (
                     <Spinner />
                   ) : (
-                    <Text  color="blue.500"
-                    cursor="pointer"
-                    _hover={{ textDecoration: "underline" }} onClick={onUpdateImage}>
+                    <Text
+                      color="blue.500"
+                      cursor="pointer"
+                      _hover={{ textDecoration: "underline" }}
+                      onClick={onUpdateImage}
+                    >
                       Guardar cambios
                     </Text>
                   ))}{" "}
                 <input
-                id="file-upload"
+                  id="file-upload"
                   type="file"
                   accept="image/x-png,image/gif,image/jpeg"
                   ref={selectFileRef}

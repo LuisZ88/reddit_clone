@@ -27,6 +27,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
       currentCommunity: communityData,
     }));
   }, []);
+
   return (
     <>
       <Header communityData={communityData} />
@@ -36,7 +37,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
           <Post communityData={communityData}></Post>
         </>
         <>
-          <About  communityData={communityData}/>
+          <About communityData={communityData} />
         </>
       </PageContent>
     </>

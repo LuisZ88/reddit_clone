@@ -38,7 +38,6 @@ import { Timestamp } from "@google-cloud/firestore";
 import useSelectFile from "../../../hooks/useSelectFile";
 
 type NewPostFormProps = {
-  onSubmit: (values: any) => void;
   user: User;
   communityImageURL?: string;
 };
@@ -75,7 +74,7 @@ export type TabItem = {
 const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
-  const {selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
+  const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [textInputs, setTextInputs] = useState({
     title: "",
     body: "",
@@ -92,15 +91,14 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
       title: textInputs.title,
       body: textInputs.body,
       numberOfComments: 0,
-      votesStatus: 0,
+      voteStatus: 0,
       createdAt: serverTimestamp() as Timestamp,
-    };
+    } as Post;
     // guardar post en firestore
     setLoading(true);
     try {
       const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
       // comprobar si hay un archivo seleccionado
-     
 
       if (selectedFile) {
         const imageRef = ref(storage, `posts/${postDocRef.id}/image`);
@@ -110,18 +108,14 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
         const downloadUrl = await getDownloadURL(imageRef);
         await updateDoc(postDocRef, { imageUrl: downloadUrl });
       }
-       // redirecionar a la comunidad
-     router.back();
+      // redirecionar a la comunidad
+      router.back();
     } catch (error: any) {
       console.log("handleCreatePost error", error);
       setError(true);
     }
     setLoading(false);
-    
-
-   
   };
-
 
   const onTextChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
