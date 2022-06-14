@@ -1,12 +1,23 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Flex, Icon, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuList,
+  Text,
+  Image,
+  Box,
+} from "@chakra-ui/react";
 import React from "react";
 import { TiHome } from "react-icons/ti";
+import useDirectory from "../../../hooks/useDirectory";
 import Communities from "./Communities";
 
 const Directory: React.FC = () => {
+  const { directoryState, toggleMenuOpen } = useDirectory();
   return (
-    <Menu>
+    <Menu isOpen={directoryState.isOpen}>
       <MenuButton
         cursor="pointer"
         padding="0 px 6px"
@@ -14,21 +25,41 @@ const Directory: React.FC = () => {
         _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
         mr={2}
         ml={{ base: 1, md: 2 }}
+        onClick={toggleMenuOpen}
       >
-        <Flex align="center" justify="space-between" width={{base:"auto", lg:"200px"}}>
+        <Flex
+          align="center"
+          justify="space-between"
+          width={{ base: "auto", lg: "200px" }}
+        >
           <Flex align="center">
-            <Icon as={TiHome} fontSize={24} mr={{ base: 1, md: 2 }} />
-            <Flex display={{ base: "none", lg: "flex" }}>
+            {directoryState.selectedMenuItem.imageUrl ? (
+              <Image
+                borderRadius="full"
+                boxSize="24px"
+                src={directoryState.selectedMenuItem.imageUrl}
+                mr={2}
+                alt="img"
+              />
+            ) : (
+              <Icon
+                fontSize={24}
+                mr={{ base: 1, md: 2 }}
+                color={directoryState.selectedMenuItem.iconColor}
+                as={directoryState.selectedMenuItem.icon}
+              />
+            )}
+            <Box display={{ base: "none", lg: "flex" }}>
               <Text fontWeight={600} fontSize="10pt">
-                Principal
+                {directoryState.selectedMenuItem.displayText}
               </Text>
-            </Flex>
+            </Box>
           </Flex>
           <ChevronDownIcon />
         </Flex>
       </MenuButton>
       <MenuList>
-          <Communities/>
+        <Communities />
       </MenuList>
     </Menu>
   );

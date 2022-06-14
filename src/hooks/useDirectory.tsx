@@ -51,7 +51,7 @@ const useDirectory = () => {
           link: `r/${existingCommunity.id}`,
           icon: FaReddit,
           iconColor: "blue.500",
-          imageURL: existingCommunity.imageURL,
+          imageUrl: existingCommunity.imageUrl,
         },
       }));
       return;
