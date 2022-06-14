@@ -11,7 +11,7 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
-import { Flex, Icon, Stack, Text, Image, Skeleton } from "@chakra-ui/react";
+import { Flex, Icon, Stack, Text, Image, Skeleton, Spinner, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import moment from "moment";
 import "moment/locale/es";
 
@@ -20,7 +20,7 @@ type PostItemProps = {
   userIsCreator: boolean;
   userVoteValue?: number;
   onVote: (value: number) => void;
-  onDeletePost: () => void;
+  onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost: () => void;
 };
 
@@ -32,7 +32,24 @@ const PostItem: React.FC<PostItemProps> = ({
   onDeletePost,
   onSelectPost,
 }) => {
-    const [loadingImage, setLoadingImage ]= useState(true);
+  const [loadingImage, setLoadingImage] = useState(true);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [error, setError] = useState(false);
+  const handleDelete = async (
+
+  ) => {
+    setLoadingDelete(true);
+    try { 
+      const success = await onDeletePost(post);
+      if (!success) {
+        throw new Error("Error al eliminar post");
+      }
+      console.log("Post eliminado");
+    } catch (error: any) {
+      setError(error.message);
+    }
+    setLoadingDelete(false);
+  };
   return (
     <Flex
       border="1px solid"
@@ -41,7 +58,7 @@ const PostItem: React.FC<PostItemProps> = ({
       borderRadius={4}
       _hover={{ borderColor: "gray.500" }}
       cursor="pointer"
-      onClick={onSelectPost}
+    
     >
       <Flex
         direction="column"
@@ -57,7 +74,7 @@ const PostItem: React.FC<PostItemProps> = ({
           }
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           fontSize={22}
-          onClick={() => onVote}
+         
           cursor="pointer"
         />
         <Text fontSize="9pt">{post.votesStatus}</Text>
@@ -69,14 +86,19 @@ const PostItem: React.FC<PostItemProps> = ({
           }
           color={userVoteValue === -1 ? "#24A0ED" : "gray.400"}
           fontSize={22}
-          onClick={() => onVote}
+        
           cursor="pointer"
         />
       </Flex>
       <Flex direction="column" width="100%">
+      {error && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Error creando la publicación</AlertTitle>
+        </Alert>
+      )}
         <Stack spacing={1} p="10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
-            {}
             <Text>
               Publicado por u/{post.creatorDisplayName}{" "}
               {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}
@@ -88,8 +110,16 @@ const PostItem: React.FC<PostItemProps> = ({
           <Text fontSize="10pt">{post.body}</Text>
           {post.imageUrl && (
             <Flex justify="center" align="center" p={2}>
-                {loadingImage && (<Skeleton height="200px" width="100%" borderRadius={4}/>) }
-              <Image display={loadingImage ? "none" : "unset"} src={post.imageUrl} alt="Post image" maxHeight="460px" onLoad={()=> setLoadingImage(false)}/>
+              {loadingImage && (
+                <Skeleton height="200px" width="100%" borderRadius={4} />
+              )}
+              <Image
+                display={loadingImage ? "none" : "unset"}
+                src={post.imageUrl}
+                alt="Post image"
+                maxHeight="460px"
+                onLoad={() => setLoadingImage(false)}
+              />
             </Flex>
           )}
         </Stack>
@@ -132,10 +162,11 @@ const PostItem: React.FC<PostItemProps> = ({
               borderRadius={4}
               _hover={{ bg: "gray.200" }}
               cursor="pointer"
-              onClick={onDeletePost}
+              onClick={handleDelete}
             >
-              <Icon as={AiOutlineDelete} mr={2} />
-              <Text fontSize="9pt">Borrar</Text>
+              {loadingDelete ? (<Spinner size="sm"/>) : (<><Icon as={AiOutlineDelete} mr={2} />
+              <Text fontSize="9pt">Borrar</Text></>)}
+              
             </Flex>
           )}
         </Flex>

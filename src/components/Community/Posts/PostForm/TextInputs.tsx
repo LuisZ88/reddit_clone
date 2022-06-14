@@ -53,7 +53,7 @@ const TextInputs: React.FC<TextInputsProps> = ({textInputs, onChange, handleCrea
           padding="0px 20px"
           disabled={false}
           onClick={handleCreatePost}
-          onLoading={loading}
+          isLoading={loading}
         >
           Publicar
         </Button>

@@ -35,6 +35,7 @@ import TextInputs from "./PostForm/TextInputs";
 import ImageUpload from "./PostForm/ImageUpload";
 import { Post } from "../../../atoms/postsAtom";
 import { Timestamp } from "@google-cloud/firestore";
+import useSelectFile from "../../../hooks/useSelectFile";
 
 type NewPostFormProps = {
   onSubmit: (values: any) => void;
@@ -74,12 +75,12 @@ export type TabItem = {
 const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
+  const {selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [textInputs, setTextInputs] = useState({
     title: "",
     body: "",
   });
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<string>();
   const [error, setError] = useState(false);
   const handleCreatePost = async () => {
     const { communityId } = router.query;
@@ -121,17 +122,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
    
   };
 
-  const onSelectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    if (e.target.files?.[0]) {
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (readerEvent) => {
-        if (readerEvent.target?.result) {
-          setSelectedFile(readerEvent.target.result as string);
-        }
-      };
-    }
-  };
+
   const onTextChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -161,7 +152,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
         )}
         {selectedTab === "Multimedia" && (
           <ImageUpload
-            onSelectImage={onSelectImage}
+            onSelectImage={onSelectFile}
             selectedFile={selectedFile}
             setSelectedFile={setSelectedFile}
             setSelectedTab={setSelectedTab}
