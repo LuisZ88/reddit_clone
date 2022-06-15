@@ -11,6 +11,7 @@ import PostItem from "../../../../components/Community/Posts/PostItem";
 import { auth, firestore } from "../../../../firebase/clientApp";
 import useCommunityData from "../../../../hooks/useCommunityData";
 import usePosts from "../../../../hooks/usePosts";
+import { User } from "firebase/auth";
 
 type PostPageProps = {};
 
@@ -72,10 +73,9 @@ const PostPage: React.FC<PostPageProps> = () => {
                   userIsCreator={
                     user?.uid === postStateValue.selectedPost.creatorId
                   }
-                  router={router}
                 />
                 <Comments
-                  user={user}
+                  user={user as User}
                   communityId={communityId as string}
                   selectedPost={postStateValue.selectedPost}
                 />
