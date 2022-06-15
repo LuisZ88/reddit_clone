@@ -30,7 +30,7 @@ import CommentItem, { Comment } from "./CommentItem";
 
 type CommentsProps = {
   user: User;
-  selectedPost: Post | null;
+  selectedPost: Post;
   communityId: string;
 };
 
