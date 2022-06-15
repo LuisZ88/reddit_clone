@@ -10,12 +10,16 @@ export type Post = {
   body: string;
   numberOfComments: number;
   voteStatus: number;
+  currentUserVoteStatus?: {
+    id: string;
+    voteValue: number;
+  };
   imageUrl?: string;
   createdAt: Timestamp;
   communityImageUrl?: string;
 };
 export type PostVote = {
-  id: string;
+  id?: string;
   postId: string;
   communityId: string;
   voteValue: number;

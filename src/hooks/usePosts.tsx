@@ -10,7 +10,7 @@ import {
 import { deleteObject, ref } from "firebase/storage";
 import { prepareServerlessUrl } from "next/dist/server/base-server";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { authModalState } from "../atoms/authModalAtom";
@@ -98,20 +98,19 @@ const usePosts = (communityData?: Community) => {
       const postRef = doc(firestore, "posts", post.id!);
       batch.update(postRef, { voteStatus: voteStatus + voteChange });
       const postIdx = postStateValue.posts.findIndex((p) => p.id === post.id);
-      updatedPosts[postIdx] = updatedPost;
+      updatedPosts[postIdx!] = updatedPost;
 
       setPostStateValue((prev) => ({
         ...prev,
         posts: updatedPosts,
         postVotes: updatedPostVotes,
       }));
-      if (postStateValue.selectedPost) {
+      if (updatedState.selectedPost) {
         setPostStateValue((prev) => ({
           ...prev,
           selectedPost: updatedPost,
         }));
       }
-
       await batch.commit();
     } catch (error: any) {
       console.log("onVote error", error);
@@ -158,15 +157,15 @@ const usePosts = (communityData?: Community) => {
     }));
   };
   useEffect(() => {
-    if (!user || !communityStateValue.currentCommunity) return;
+    if (!user?.uid || !communityStateValue.currentCommunity) return;
     getCommunityPostVotes(communityStateValue.currentCommunity.id);
     console.log("usePosts");
-  }, [user, communityStateValue.currentCommunity]);
+  }, [user, communityStateValue.currentCommunity]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!user) {
       setPostStateValue((prev) => ({ ...prev, postVotes: [] }));
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
   return {
     postStateValue,
     setPostStateValue,

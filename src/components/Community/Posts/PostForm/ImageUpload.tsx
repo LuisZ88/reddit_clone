@@ -28,10 +28,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           />
           <Stack direction="row" mt={4}>
             <Button height="28px" onClick={() => setSelectedTab("Publicar")}>
-              Volver
+              Volver para publicar
             </Button>
-            <Button height="28px" onClick={() => setSelectedFile("")} variant="outline">
-              <Icon as={MdDelete} fontSize="20px"/>Borrar
+            <Button
+              height="28px"
+              onClick={() => setSelectedFile("")}
+              variant="outline"
+            >
+              <Icon as={MdDelete} fontSize="20px" />
+              Borrar
             </Button>
           </Stack>
         </>
@@ -53,6 +58,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </Button>
           <input
             type="file"
+            accept="image/png, image/gif, image/jpeg"
             ref={selectedFileRef}
             hidden
             onChange={onSelectImage}

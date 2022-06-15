@@ -23,6 +23,7 @@ interface CommunityState {
     | undefined;
   mySnippets: CommunitySnippet[];
   currentCommunity: Community;
+  snippetsFetched: boolean;
 }
 export const defaultCommunity: Community = {
   id: "",
@@ -33,6 +34,7 @@ export const defaultCommunity: Community = {
 const defaultCommunityState: CommunityState = {
   mySnippets: [],
   currentCommunity: defaultCommunity,
+  snippetsFetched: false,
 };
 
 export const communityState = atom<CommunityState>({

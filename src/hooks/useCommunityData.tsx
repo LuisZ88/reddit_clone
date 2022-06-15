@@ -107,6 +107,7 @@ const useCommunityData = () => {
       setCommunityStateValue((prev) => ({
         ...prev,
         mySnippets: snippets as CommunitySnippet[],
+        snippetsFetched: true,
       }));
     } catch (error: any) {
       console.log("getMySnippet error", error);
@@ -133,7 +134,11 @@ const useCommunityData = () => {
   };
   useEffect(() => {
     if (!user) {
-      setCommunityStateValue((prev) => ({ ...prev, mySnippets: [] }));
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+        snippetsFetched: false,
+      }));
       return;
     }
     getMySnippets();
@@ -143,7 +148,7 @@ const useCommunityData = () => {
     if (communityId && !communityStateValue.currentCommunity) {
       getCommunityData(communityId as string);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     communityStateValue,

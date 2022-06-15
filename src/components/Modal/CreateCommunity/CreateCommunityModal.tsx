@@ -24,11 +24,13 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
 import { auth, firestore } from "../../../firebase/clientApp";
+import useDirectory from "../../../hooks/useDirectory";
 
 type CreateCommunityModalProps = {
   open: boolean;
@@ -39,6 +41,8 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   open,
   handleClose,
 }) => {
+  const { toggleMenuOpen } = useDirectory();
+  const router = useRouter();
   const [communityName, setCommunityName] = useState("");
   const [charactersLeft, setCharactersLeft] = useState(21);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,13 +86,18 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
           privacyType: communityType,
         });
         //create snnipet for community
-        transaction.set(doc(firestore, `users/${user?.uid}/communitySnippets`, communityName), {
-          communityId: communityName,
-          isModerator: true,
-        });
+        transaction.set(
+          doc(firestore, `users/${user?.uid}/communitySnippets`, communityName),
+          {
+            communityId: communityName,
+            isModerator: true,
+          }
+        );
       });
+      toggleMenuOpen();
+      handleClose();
 
-      
+      router.push(`/r/${communityName}`);
     } catch (error: any) {
       console.log("handleCreateCommunity", error);
       setError(error.message);
@@ -110,14 +119,14 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
             fontSize={15}
             padding={3}
           >
-            Create a community
+            Crear una comunidad
           </ModalHeader>
           <Box pl={3} pr={3}>
             <Divider />
             <ModalCloseButton />
             <ModalBody display="flex" flexDirection="column" padding="10px 0px">
               <Text fontWeight={600} fontSize={15}>
-                Name
+                Nombre
               </Text>
               <Text fontSize={11} color="gray.500">
                 El nombre de la comunidad, incluyendo el uso de mayúsculas, no

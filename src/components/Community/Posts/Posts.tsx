@@ -54,18 +54,18 @@ const Posts: React.FC<PostProps> = ({ communityData }) => {
         <PostLoader />
       ) : (
         <Stack>
-          {postStateValue.posts.map((post: Post) => (
+          {postStateValue.posts.map((post) => (
             <PostItem
               key={post.id}
               post={post}
               userIsCreator={user?.uid === post.creatorId}
+              onVote={onVote}
+              onDeletePost={onDeletePost}
+              onSelectPost={() => onSelectPost(post)}
               userVoteValue={
                 postStateValue.postVotes.find((vote) => vote.postId === post.id)
                   ?.voteValue
               }
-              onVote={onVote}
-              onDeletePost={onDeletePost}
-              onSelectPost={() => onSelectPost(post)}
             />
           ))}
         </Stack>
