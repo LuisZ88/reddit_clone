@@ -21,14 +21,9 @@ const PostPage: React.FC<PostPageProps> = () => {
   const { communityStateValue } = useCommunityData();
 
   // Need to pass community data here to see if current post [pid] has been voted on
-  const {
-    postStateValue,
-    setPostStateValue,
-    onDeletePost,
-    loading,
-    setLoading,
-    onVote,
-  } = usePosts(communityStateValue.currentCommunity);
+  const { postStateValue, setPostStateValue, onDeletePost, onVote } = usePosts(
+    communityStateValue.currentCommunity
+  );
 
   const fetchPost = async () => {
     console.log("FETCHING POST");
