@@ -24,6 +24,8 @@ import { FaReddit } from "react-icons/fa";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { updateDoc, doc } from "firebase/firestore";
 import { useSetRecoilState } from "recoil";
+import useDirectory from "../../hooks/useDirectory";
+import { authModalState } from "../../atoms/authModalAtom";
 
 type AboutProps = {
   communityData: Community;
@@ -35,8 +37,22 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
   const selectFileRef = useRef<HTMLInputElement>(null);
   const { setSelectedFile, onSelectFile, selectedFile } = useSelectFile();
   const [uploadingImage, setUploadingImage] = React.useState(false);
-  const setCommunityStateValue = useSetRecoilState(communityState);
+  const setAuthModalState = useSetRecoilState(authModalState);
   const { communityId } = router.query;
+  const { toggleMenuOpen } = useDirectory();
+  const onClick = () => {
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+      return;
+    }
+    const { communityId } = router.query;
+
+    if (communityId) {
+      router.push(`/r/${communityId}/submit`);
+      return;
+    }
+    toggleMenuOpen();
+  };
 
   const onUpdateImage = async () => {
     console.log("onUpdateImage");
@@ -106,11 +122,9 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
               </Text>
             )}
           </Flex>
-          <Link href={`/r/${communityId}/submit`}>
-            <Button mt={3} height="30px">
-              Publicar
-            </Button>
-          </Link>
+          <Button onClick={onClick} mt={3} height="30px">
+            Publicar
+          </Button>
           {user?.uid === communityData.creatorId && (
             <>
               {" "}
@@ -172,3 +186,9 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
   );
 };
 export default About;
+function setAuthModalState(arg0: { open: boolean; view: string }) {
+  throw new Error("Function not implemented.");
+}
+function setCommunityStateValue(arg0: (prev: any) => any) {
+  throw new Error("Function not implemented.");
+}
